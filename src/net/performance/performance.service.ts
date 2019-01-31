@@ -56,6 +56,7 @@ export class PerformanceService {
         }
         const lines = data.trim().split('\n');
         const result = {
+            'top': this.parseTop(lines[0]),
             'cpu': this.parseLine(lines[2]),
             'mem': this.parseLine(lines[3], new RegExp('[,.]')),    // 数值可能被','或'.'分隔开
             'swap': this.parseLine(lines[4], new RegExp('[,.]')),
@@ -73,5 +74,11 @@ export class PerformanceService {
             result[element.substr(elementValues[0].length).trim()] = elementValues[0].trim();
         });
         return result;
+    }
+
+    private parseTop(data: string): {} {
+        const values = data.split(' ');
+        const time = values[2];
+        return { 'time': time }
     }
 }
