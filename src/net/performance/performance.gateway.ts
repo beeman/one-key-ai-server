@@ -14,7 +14,7 @@ export class PerformanceGateway implements OnGatewayInit {
 
   afterInit(server:any) {
     this.performanceService.getData().subscribe((data) => {
-      server.emit('performance', '' + data);
+      server.emit('topInfo', '' + data);
     });
   }
 

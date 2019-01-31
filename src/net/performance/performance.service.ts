@@ -43,7 +43,7 @@ export class PerformanceService {
         );
 
         fromEvent(this.process.stderr, 'data').subscribe((data) => {
-            Logger.error('from event: standard error output:\n' + data, this.tag);
+            Logger.error('standard error output:\n' + data, this.tag);
         });
         fromEvent(this.process, 'close').subscribe((data) => {
             Logger.log('child process eixt ,exit:' + data, this.tag);
