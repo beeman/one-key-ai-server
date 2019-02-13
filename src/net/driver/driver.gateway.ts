@@ -1,6 +1,5 @@
 import { SubscribeMessage, WebSocketGateway, OnGatewayInit } from '@nestjs/websockets';
 import { DriverService } from './driver.service';
-import { Logger } from '@nestjs/common';
 
 @WebSocketGateway()
 export class DriverGateway implements OnGatewayInit {
@@ -10,21 +9,24 @@ export class DriverGateway implements OnGatewayInit {
   afterInit(server: any): void {
   }
 
-  @SubscribeMessage('getDriverDevices')
-  async getDriverDevices(client: any, payload: any) {
-    const result = await this.driverService.getDevices();
-    client.emit('driverDevices', { data: result });
+  @SubscribeMessage('driverDevices')
+  getDriverDevices(client: any, payload: any) {
+    return this.driverService.getDevices().subscribe(value => {
+      client.emit('driverDevices', value);
+    });
   }
 
-  @SubscribeMessage('getDriverList')
-  async getDriverList(client: any, payload: any) {
-    const result = await this.driverService.getList();
-    client.emit('driverList', { data: result });
+  @SubscribeMessage('driverList')
+  getDriverList(client: any, payload: any) {
+    this.driverService.getList().subscribe(value => {
+      client.emit('driverList', value);
+    });
   }
 
   @SubscribeMessage('autoinstall')
-  async autoinstall(client: any, payload: any) {
-    Logger.log('autoinstall');
-    this.driverService.autoinstall();
+  autoinstall(client: any, payload: any) {
+    this.driverService.autoinstall().subscribe(value => {
+      client.emit('autoinstall', value);
+    });
   }
 }

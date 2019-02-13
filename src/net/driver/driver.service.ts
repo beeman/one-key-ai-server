@@ -1,48 +1,45 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { spawn } from 'child_process';
 import { fromEvent } from 'rxjs';
+import { ProcessService } from 'src/core/process/process.service';
+import { map } from 'rxjs/operators';
 
 @Injectable()
 export class DriverService {
 
     private readonly tag = DriverService.name;
 
-    public async autoinstall() {
+    constructor(private readonly processService: ProcessService) {
+    }
+
+    public autoinstall() {
         const process = spawn('ubuntu-drivers', ['autoinstall']);
-        fromEvent(process.stdout, 'data').subscribe((value) => {
-            Logger.log('' + value, this.tag);
-        });
-        fromEvent(process.stderr, 'data').subscribe((value) => {
-            Logger.error('' + value, this.tag);
-            process.kill();
-        });
-
+        return this.processService.execute(process);
     }
 
-    public async getList() {
+    public getList() {
         const process = spawn('ubuntu-drivers', ['list']);
-        return new Promise((resolve, reject) => {
-            process.stdout.on('data', (data) => {
-                resolve(('' + data).trim().split('\n'));
-            });
-            process.stderr.on('data', (data) => {
-                reject('' + data);
-                process.kill();
-            });
-        });
+        return this.processService.execute(process).pipe(
+            map((value) => {
+                if (value.type === 'stdout') {
+                    return { type: value.type, message: value.message.trim().split('\n') };
+                }
+                return value;
+            })
+        );;
     }
 
-    public async getDevices() {
+    public getDevices() {
         const process = spawn('ubuntu-drivers', ['devices']);
-        return new Promise((resolve, reject) => {
-            process.stdout.on('data', (data) => {
-                resolve(this.parseDevices('' + data));
-            });
-            process.stderr.on('data', (data) => {
-                reject('' + data);
-                process.kill();
-            });
-        });
+        return this.processService.execute(process).pipe(
+            map(value => {
+                if (value.type === 'stdout') {
+                    value.message = this.parseDevices(value.message);
+                    return value;
+                }
+                return value;
+            })
+        );
     }
 
     private parseDevices(data: string): {} {

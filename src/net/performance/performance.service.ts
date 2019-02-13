@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { spawn, ChildProcess } from 'child_process';
 import { fromEvent, Observable, from } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
+import { ProcessService } from 'src/core/process/process.service';
 
 @Injectable()
 export class PerformanceService {
@@ -9,7 +10,7 @@ export class PerformanceService {
     private process: ChildProcess = null;
     private message$: Observable<any> = null;
 
-    constructor() { }
+    constructor(private readonly processService: ProcessService) { }
 
     public getData(): Observable<any> {
         if (!this.process) {
@@ -33,21 +34,18 @@ export class PerformanceService {
         this.closePorcess();
         this.process = spawn('top', ['-p 0', '-b', '-d 1', '-i']);
 
-        this.message$ = fromEvent(this.process.stdout, 'data').pipe(
+        this.message$ = this.processService.execute(this.process).pipe(
             map((value) => {
-                return this.parseMessage('' + value);
+                if (value.type === 'stdout') {
+                    value.message = this.parseMessage(value.message);
+                    return value;
+                }
+                return value;
             }),
             filter((value) => {
-                return value !== null;
+                return value.type !== 'stdout' || (value.type === 'stdout' && value.message !== null);
             })
         );
-
-        fromEvent(this.process.stderr, 'data').subscribe((data) => {
-            Logger.error('standard error output:\n' + data, this.tag);
-        });
-        fromEvent(this.process, 'close').subscribe((data) => {
-            Logger.log('child process eixt ,exit:' + data, this.tag);
-        });
     }
 
     private parseMessage(data: string): {} {
