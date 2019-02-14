@@ -1,0 +1,24 @@
+import { Injectable, Logger } from '@nestjs/common';
+import { Observable } from 'rxjs';
+import { ProcessService } from 'src/core/process/process.service';
+import { spawn, ChildProcess } from 'child_process';
+
+@Injectable()
+export class DockerService {
+
+    private readonly tag = DockerService.name;
+    private shellProcess: ChildProcess = null;
+
+    constructor(private readonly processService: ProcessService) { }
+
+
+    public getDockerImages(): Observable<any> {
+        return this.processService.execute(spawn('docker', ['images']));
+    }
+
+    public runDocker(params) {
+        this.shellProcess = spawn(`docker`, [`run`, '-i', '--runtime=nvidia', `${params}`, 'bash']);
+        this.shellProcess.stdin.write('ls');
+        return this.processService.execute(this.shellProcess);
+    }
+}

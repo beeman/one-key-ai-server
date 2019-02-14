@@ -19,7 +19,7 @@ export class ProcessService {
                 Logger.error('stderr: ' + value, this.tag);
             });
             process.on('exit', (code: number, signal: string) => {
-                observer.next({ type: 'exit', code: code, message: signal });
+                observer.next({ type: 'exit', code: code, signal: signal });
                 observer.complete();
             });
         });

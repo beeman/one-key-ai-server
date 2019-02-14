@@ -1,6 +1,6 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { spawn, ChildProcess } from 'child_process';
-import { fromEvent, Observable, from } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 import { ProcessService } from 'src/core/process/process.service';
 
