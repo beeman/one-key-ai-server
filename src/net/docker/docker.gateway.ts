@@ -7,7 +7,7 @@ export class DockerGateway {
   private readonly tag = DockerGateway.name;
 
   constructor(private readonly dockerService: DockerService) {
-    this.dockerService.getDockerImages();
+    // this.dockerService.getDockerImages();
   }
 
   @SubscribeMessage('dockerImages')

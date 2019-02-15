@@ -34,11 +34,11 @@ export class DriverService {
         return this.processService.execute(process).pipe(
             map((value) => {
                 if (value.type === 'stdout') {
-                    return { type: value.type, message: value.message.trim().split('\n') };
+                    return { type: value.type, message: value.value.trim().split('\n') };
                 }
                 return value;
-            })
-        );;
+            }),
+        );
     }
 
     /**
@@ -52,11 +52,11 @@ export class DriverService {
         return this.processService.execute(process).pipe(
             map(value => {
                 if (value.type === 'stdout') {
-                    value.message = this.parseDevices(value.message);
+                    value.value = this.parseDevices(value.value);
                     return value;
                 }
                 return value;
-            })
+            }),
         );
     }
 
@@ -92,12 +92,12 @@ export class DriverService {
         lines.forEach((value) => {
             if (value) {
                 const valueData = value.split(':');
-                const key = valueData[0].trim();
+                const k = valueData[0].trim();
                 const name = valueData[1].trim();
-                if (key === 'vendor' && name.startsWith('NVIDIA')) {
+                if (k === 'vendor' && name.startsWith('NVIDIA')) {
                     isNvidia = true;
                 }
-                result.push({ 'key': key, 'value': name });
+                result.push({ key: k, value: name });
             }
         });
 

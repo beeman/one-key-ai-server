@@ -2,12 +2,9 @@ import { SubscribeMessage, WebSocketGateway, OnGatewayInit } from '@nestjs/webso
 import { DriverService } from './driver.service';
 
 @WebSocketGateway()
-export class DriverGateway implements OnGatewayInit {
+export class DriverGateway {
 
   constructor(private readonly driverService: DriverService) { }
-
-  afterInit(server: any): void {
-  }
 
   @SubscribeMessage('driverDevices')
   getDriverDevices(client: any, payload: any) {

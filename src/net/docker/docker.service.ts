@@ -11,9 +11,8 @@ export class DockerService {
 
     constructor(private readonly processService: ProcessService) { }
 
-
     public getDockerImages(): Observable<any> {
-        return this.processService.execute(spawn('docker', ['images']));
+        return this.processService.executeWithCheck('docker', ['images']);
     }
 
     public runDocker(params) {
