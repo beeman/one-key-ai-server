@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { ProcessService } from 'src/core/process/process.service';
 import { spawn, ChildProcess } from 'child_process';
+import { ProcessResultType } from 'src/core/process/process-result-type';
 
 @Injectable()
 export class DockerService {
@@ -11,8 +12,12 @@ export class DockerService {
 
     constructor(private readonly processService: ProcessService) { }
 
-    public getDockerImages(): Observable<any> {
+    public getDockerImages(): Observable<ProcessResultType> {
         return this.processService.executeWithCheck('docker', ['images']);
+    }
+
+    public installDockerCE(): Observable<ProcessResultType> {
+        return null;
     }
 
     public runDocker(params) {

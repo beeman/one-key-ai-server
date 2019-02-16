@@ -6,9 +6,7 @@ import { DockerService } from './docker.service';
 export class DockerGateway {
   private readonly tag = DockerGateway.name;
 
-  constructor(private readonly dockerService: DockerService) {
-    // this.dockerService.getDockerImages();
-  }
+  constructor(private readonly dockerService: DockerService) { }
 
   @SubscribeMessage('dockerImages')
   dockerImages(client: any, payload: any) {
@@ -20,7 +18,6 @@ export class DockerGateway {
   @SubscribeMessage('runDocker')
   runDocker(client: any, payload: any) {
     this.dockerService.runDocker(payload).subscribe(value => {
-      Logger.log(value);
       client.emit('runDocker');
     });
   }

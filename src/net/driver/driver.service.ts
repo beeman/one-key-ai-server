@@ -3,6 +3,7 @@ import { spawn } from 'child_process';
 import { fromEvent } from 'rxjs';
 import { ProcessService } from 'src/core/process/process.service';
 import { map } from 'rxjs/operators';
+import { ProcessResultType } from 'src/core/process/process-result-type';
 
 @Injectable()
 export class DriverService {
@@ -19,8 +20,8 @@ export class DriverService {
      * @memberof DriverService
      */
     public autoinstall() {
-        const process = spawn('ubuntu-drivers', ['autoinstall']);
-        return this.processService.execute(process);
+        // const process = spawn('ubuntu-drivers', ['autoinstall']);
+        return this.processService.executeWithCheck('ubuntu-drivers', ['autoinstall']);
     }
 
     /**
@@ -30,11 +31,11 @@ export class DriverService {
      * @memberof DriverService
      */
     public getList() {
-        const process = spawn('ubuntu-drivers', ['list']);
-        return this.processService.execute(process).pipe(
-            map((value) => {
+        // const process = spawn('ubuntu-drivers', ['list']);
+        return this.processService.executeWithCheck('ubuntu-drivers', ['list']).pipe(
+            map((value): ProcessResultType => {
                 if (value.type === 'stdout') {
-                    return { type: value.type, message: value.value.trim().split('\n') };
+                    return { type: value.type, value: value.value.trim().split('\n') };
                 }
                 return value;
             }),
@@ -48,8 +49,8 @@ export class DriverService {
      * @memberof DriverService
      */
     public getDevices() {
-        const process = spawn('ubuntu-drivers', ['devices']);
-        return this.processService.execute(process).pipe(
+        // const process = spawn('ubuntu-drivers', ['devices']);
+        return this.processService.executeWithCheck('ubuntu-drivers', ['devices']).pipe(
             map(value => {
                 if (value.type === 'stdout') {
                     value.value = this.parseDevices(value.value);

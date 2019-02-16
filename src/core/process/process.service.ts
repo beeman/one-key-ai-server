@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Observable, fromEvent } from 'rxjs';
+import { Observable } from 'rxjs';
 import { ChildProcess, spawn, SpawnOptions } from 'child_process';
 import { ProcessResultType } from './process-result-type';
 
@@ -12,16 +12,17 @@ export class ProcessService {
         return new Observable(observer => {
             this.existCommand(command).subscribe(value => {
                 if (!value) {
-                    observer.next({ type: 'exist', value: false });
+                    observer.next({ type: 'not exist', value: command });
                     observer.complete();
+                } else {
+                    this.execute(spawn(command, args, options)).subscribe(v => {
+                        observer.next(v);
+                    }, error => {
+                        observer.error(error);
+                    }, () => {
+                        observer.complete();
+                    });
                 }
-                this.execute(spawn(command, args, options)).subscribe(v => {
-                    observer.next(v);
-                }, error => {
-                    observer.error(error);
-                }, () => {
-                    observer.complete();
-                });
             });
         });
     }
