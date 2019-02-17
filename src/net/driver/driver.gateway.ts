@@ -1,5 +1,6 @@
 import { SubscribeMessage, WebSocketGateway, OnGatewayInit } from '@nestjs/websockets';
 import { DriverService } from './driver.service';
+import { Logger } from '@nestjs/common';
 
 @WebSocketGateway()
 export class DriverGateway {

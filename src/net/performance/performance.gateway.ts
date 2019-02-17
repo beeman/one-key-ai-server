@@ -16,4 +16,5 @@ export class PerformanceGateway implements OnGatewayInit {
       server.emit('topInfo', data);
     });
   }
+
 }

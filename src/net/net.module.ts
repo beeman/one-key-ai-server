@@ -6,9 +6,18 @@ import { DriverGateway } from './driver/driver.gateway';
 import { ProcessService } from 'src/core/process/process.service';
 import { DockerGateway } from './docker/docker.gateway';
 import { DockerService } from './docker/docker.service';
+import { TerminalsController } from './terminals/terminals.controller';
 
 @Module({
-  controllers: [],
-  providers: [PerformanceService, PerformanceGateway, DriverService, DriverGateway, ProcessService, DockerGateway, DockerService]
+  controllers: [TerminalsController],
+  providers: [
+    PerformanceService,
+    PerformanceGateway,
+    DriverService,
+    DriverGateway,
+    ProcessService,
+    DockerGateway,
+    DockerService,
+    ],
 })
 export class NetModule { }
