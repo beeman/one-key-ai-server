@@ -1,8 +1,8 @@
 import { Controller, Logger } from '@nestjs/common';
 import * as io from 'socket.io';
-import { PerformanceService } from '../performance/performance.service';
-import { DriverService } from '../driver/driver.service';
-import { DockerService } from '../docker/docker.service';
+import { PerformanceService } from './performance/performance.service';
+import { DriverService } from './driver/driver.service';
+import { DockerService } from './docker/docker.service';
 
 
 /**

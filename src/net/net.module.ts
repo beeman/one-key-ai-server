@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { PerformanceService } from './performance/performance.service';
-import { DriverService } from './driver/driver.service';
+import { PerformanceService } from './info//performance/performance.service';
+import { DriverService } from './info/driver/driver.service';
 import { ProcessService } from '../core/process/process.service';
-import { DockerService } from './docker/docker.service';
+import { DockerService } from './info/docker/docker.service';
 import { TerminalsController } from './terminals/terminals.controller';
 import { InfoController } from './info/info.controller';
 

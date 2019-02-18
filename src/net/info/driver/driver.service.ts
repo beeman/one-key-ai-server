@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { ProcessService } from '../../core/process/process.service';
+import { ProcessService } from '../../../core/process/process.service';
 import { map } from 'rxjs/operators';
-import { ProcessResultType } from '../../core/process/process-result-type';
+import { ProcessResultType } from '../../../core/process/process-result-type';
 
 @Injectable()
 export class DriverService {
