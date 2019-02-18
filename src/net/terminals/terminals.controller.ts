@@ -1,5 +1,5 @@
 import { Controller, Post, Body } from '@nestjs/common';
-import { TerminalManager } from 'src/net/terminals/terminal-manager.service';
+import { TerminalManager } from './terminal-manager.service';
 
 @Controller('terminals')
 export class TerminalsController {

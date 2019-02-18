@@ -22,21 +22,21 @@
   "dependencies": {
     "@nestjs/common": "^5.4.0",
     "@nestjs/core": "^5.4.0",
-    "@nestjs/websockets": "^5.6.2",
-    "express-ws": "^4.0.0",
+    "ejs": "^2.6.1",
     "node-pty": "^0.8.1",
     "nodejs-websocket": "^1.7.2",
     "reflect-metadata": "^0.1.12",
     "rimraf": "^2.6.2",
     "rxjs": "^6.2.2",
-    "typescript": "^3.0.1"
+    "socket.io": "^2.2.0"
   },
   "devDependencies": {
     "@nestjs/testing": "^5.1.0",
+    "@nestjs/websockets": "^5.6.2",
     "@types/express": "^4.16.0",
-    "@types/express-ws": "^3.0.0",
     "@types/jest": "^23.3.1",
     "@types/node": "^10.7.1",
+    "@types/socket.io": "^2.1.2",
     "@types/supertest": "^2.0.5",
     "jest": "^23.5.0",
     "nodemon": "^1.18.3",
@@ -46,7 +46,8 @@
     "ts-loader": "^4.4.2",
     "ts-node": "^7.0.1",
     "tsconfig-paths": "^3.5.0",
-    "tslint": "5.11.0"
+    "tslint": "5.11.0",
+    "typescript": "^3.0.1"
   },
   "jest": {
     "moduleFileExtensions": [
@@ -61,5 +62,16 @@
     },
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
+  },
+  "bin": "dist/main.js",
+  "pkg": {
+    "assets": [
+      "dist/one-key-ai-client/**/*.js",
+      "dist/one-key-ai-client/**/*.html",
+      "dist/one-key-ai-client/**/*.svg"
+    ],
+    "targets": [
+      "latest"
+    ]
   }
 }

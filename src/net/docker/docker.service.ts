@@ -1,8 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import { ProcessService } from 'src/core/process/process.service';
+import { ProcessService } from '../../core/process/process.service';
 import { spawn, ChildProcess } from 'child_process';
-import { ProcessResultType } from 'src/core/process/process-result-type';
+import { ProcessResultType } from '../../core/process/process-result-type';
 
 @Injectable()
 export class DockerService {

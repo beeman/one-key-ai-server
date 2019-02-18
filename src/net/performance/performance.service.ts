@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { spawn, ChildProcess } from 'child_process';
 import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
-import { ProcessService } from 'src/core/process/process.service';
+import { ProcessService } from '../../core/process/process.service';
 
 @Injectable()
 export class PerformanceService {
