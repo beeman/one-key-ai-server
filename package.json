@@ -18,7 +18,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "pkg": "pkg . -o OneKeyAI"
+    "pkg": "pkg . -o ../OneKeyAI/OneKeyAI"
   },
   "dependencies": {
     "@nestjs/common": "^5.4.0",
@@ -67,9 +67,10 @@
   "bin": "dist/main.js",
   "pkg": {
     "assets": [
-      "dist/one-key-ai-client/**/*.js",
-      "dist/one-key-ai-client/**/*.html",
-      "dist/one-key-ai-client/**/*.svg"
+      "one-key-ai-client/**/*.js",
+      "one-key-ai-client/**/*.html",
+      "one-key-ai-client/**/*.svg",
+      "one-key-ai-client/**/*.ico"
     ],
     "targets": [
       "latest"

@@ -45,7 +45,7 @@ export class ProcessService {
         });
     }
 
-    public existCommand(command: string): Observable<boolean> {
+    private existCommand(command: string): Observable<boolean> {
         const process = spawn('which', [command]);
 
         return new Observable(observer => {
