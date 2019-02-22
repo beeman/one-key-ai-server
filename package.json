@@ -67,10 +67,7 @@
   "bin": "dist/main.js",
   "pkg": {
     "assets": [
-      "one-key-ai-client/**/*.js",
-      "one-key-ai-client/**/*.html",
-      "one-key-ai-client/**/*.svg",
-      "one-key-ai-client/**/*.ico"
+      "one-key-ai-client/**/*"
     ],
     "targets": [
       "latest"

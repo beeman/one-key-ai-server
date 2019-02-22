@@ -7,7 +7,7 @@ import { openBrowser } from './tools';
 
 const port = 3000;
 
-openBrowser(port);
+// openBrowser(port);
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
