@@ -22,7 +22,6 @@ export class TerminalManager {
             env: process.env,
         });
 
-        Logger.log('Created terminal with PID: ' + term.pid);
         this.terminals[term.pid] = term;
         this.logs[term.pid] = '';
         term.on('data', (data) => {
@@ -41,7 +40,6 @@ export class TerminalManager {
         const pid = params[2];
 
         const term = this.terminals[parseInt(pid, 10)];
-        Logger.log('Connected to terminal ' + term.pid);
         conn.send(this.logs[term.pid]);
 
         function buffer(socket, timeout) {

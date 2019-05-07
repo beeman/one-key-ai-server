@@ -12,13 +12,13 @@ export class DockerService {
 
     constructor(private readonly processService: ProcessService) { }
 
-    public getDockerImages(): Observable<ProcessResultType> {
-        return this.processService.executeWithCheck('docker', ['images']);
-    }
+    // public getDockerImages(): Observable<ProcessResultType> {
+    //     return this.processService.executeWithCheck('docker', ['images']);
+    // }
 
-    public installDockerCE(): Observable<ProcessResultType> {
-        return null;
-    }
+    // public installDockerCE(): Observable<ProcessResultType> {
+    //     return null;
+    // }
 
     public runDocker(params) {
         this.shellProcess = spawn(`docker`, [`run`, '-i', '--runtime=nvidia', `${params}`, 'bash']);

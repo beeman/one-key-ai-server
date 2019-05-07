@@ -23,6 +23,7 @@
   "dependencies": {
     "@nestjs/common": "^5.4.0",
     "@nestjs/core": "^5.4.0",
+    "dockerode": "^2.5.8",
     "ejs": "^2.6.1",
     "node-pty": "^0.8.1",
     "nodejs-websocket": "^1.7.2",
@@ -34,6 +35,7 @@
   "devDependencies": {
     "@nestjs/testing": "^5.1.0",
     "@nestjs/websockets": "^5.6.2",
+    "@types/dockerode": "^2.5.16",
     "@types/express": "^4.16.0",
     "@types/jest": "^23.3.1",
     "@types/node": "^10.7.1",

@@ -42,11 +42,11 @@ export class InfoController {
                     socket.emit('driverList', value);
                 });
             });
-            socket.on('dockerImages', () => {
-                this.dockerService.getDockerImages().subscribe(value => {
-                    socket.emit('dockerImages', value);
-                });
-            });
+            // socket.on('dockerImages', () => {
+            //     this.dockerService.getDockerImages().subscribe(value => {
+            //         socket.emit('dockerImages', value);
+            //     });
+            // });
             socket.on('runDocker', (args) => {
                 this.dockerService.runDocker(args).subscribe(value => {
                     socket.emit('runDocker');
