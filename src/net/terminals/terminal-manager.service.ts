@@ -70,7 +70,6 @@ export class TerminalManager {
         });
         conn.on('close', () => {
             term.kill();
-            Logger.log('Closed terminal ' + term.pid);
             // Clean things up
             delete this.terminals[term.pid];
             delete this.logs[term.pid];

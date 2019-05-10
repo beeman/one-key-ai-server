@@ -1,6 +1,7 @@
 import { Controller, Get, Response, HttpStatus, Logger, Post, Body } from '@nestjs/common';
 import { DockerService } from 'src/docker/services/docker.service';
 import * as Docker from 'dockerode';
+import { rename } from 'fs';
 
 @Controller('containers')
 export class ContainersController {
@@ -18,7 +19,7 @@ export class ContainersController {
             } else {
                 res.json(err);
             }
-        })
+        });
     }
 
     @Post('stop')
@@ -45,13 +46,14 @@ export class ContainersController {
 
     @Post('start')
     start(@Response() res, @Body() body) {
-        this.docker.getContainer(body['id']).start((err) => {
+        const container = this.docker.getContainer(body['id']);
+        container.start((err) => {
             if (err) {
                 res.json(err);
             } else {
                 res.json(HttpStatus.OK);
             }
-        })
+        });
     }
 
     @Post('restart')
@@ -68,6 +70,17 @@ export class ContainersController {
     @Post('remove')
     remove(@Response() res, @Body() body) {
         this.docker.getContainer(body['id']).remove((err) => {
+            if (err) {
+                res.json(err);
+            } else {
+                res.json(HttpStatus.OK);
+            }
+        })
+    }
+
+    @Post('rename')
+    rename(@Response() res, @Body() body) {
+        this.docker.getContainer(body['id']).rename({ name: body['name'] }, (err) => {
             if (err) {
                 res.json(err);
             } else {

@@ -2,7 +2,6 @@ import { Controller, Logger } from '@nestjs/common';
 import * as io from 'socket.io';
 import { PerformanceService } from './performance/performance.service';
 import { DriverService } from './driver/driver.service';
-import { DockerService } from './docker/docker.service';
 
 
 /**
@@ -16,8 +15,7 @@ import { DockerService } from './docker/docker.service';
 @Controller('info')
 export class InfoController {
     constructor(private readonly performanceService: PerformanceService,
-        private readonly driverService: DriverService,
-        private readonly dockerService: DockerService) {
+        private readonly driverService: DriverService) {
         const server = io(3001);
 
         // 发送top信息至客户端
@@ -40,16 +38,6 @@ export class InfoController {
             socket.on('driverList', () => {
                 this.driverService.getList().subscribe(value => {
                     socket.emit('driverList', value);
-                });
-            });
-            // socket.on('dockerImages', () => {
-            //     this.dockerService.getDockerImages().subscribe(value => {
-            //         socket.emit('dockerImages', value);
-            //     });
-            // });
-            socket.on('runDocker', (args) => {
-                this.dockerService.runDocker(args).subscribe(value => {
-                    socket.emit('runDocker');
                 });
             });
         });

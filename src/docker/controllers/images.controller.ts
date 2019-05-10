@@ -32,4 +32,22 @@ export class ImagesController {
             }
         });
     }
+
+    @Post('create-container')
+    createContainer(@Response() res, @Body() body) {
+        const options: Docker.ContainerCreateOptions = {};
+        options.Image = body['id'];
+        if (body['name']) {
+            options.name = body['name'];
+        }
+
+        this.docker.createContainer(options, (err, info) => {
+            if (err) {
+                res.json(err);
+            } else {
+                res.json(HttpStatus.OK);
+            }
+            console.log(info);
+        });
+    }
 }

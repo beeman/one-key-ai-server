@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { join } from 'path';
 import { renderFile } from 'ejs';
-import { openBrowser } from './tools';
+import { SocketIOServer } from './core/socket-io-server';
 
 
 const port = 3000;
@@ -21,6 +21,8 @@ async function bootstrap() {
   app.set('view engine', 'html');
 
   // app.useWebSocketAdapter(new WsAdapter(app));
+
+  SocketIOServer.getInstance().listen(app.getHttpServer());
 
   await app.listen(port);
 }
