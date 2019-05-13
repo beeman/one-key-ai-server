@@ -35,8 +35,18 @@ export class ImagesController {
 
     @Post('create-container')
     createContainer(@Response() res, @Body() body) {
-        const options: Docker.ContainerCreateOptions = {};
-        options.Image = body['id'];
+        const options: Docker.ContainerCreateOptions = {
+            Image: body['id'],
+            AttachStdin: false,
+            AttachStdout: false,
+            AttachStderr: false,
+            Tty: true,
+            HostConfig: {
+                PortBindings: {},
+                PublishAllPorts: true,
+                Binds: []
+            },
+        };
         if (body['name']) {
             options.name = body['name'];
         }
