@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import * as io from 'socket.io';
 import { DockerService } from './docker.service';
 import * as Docker from 'dockerode';
-import { SocketIOServer } from 'src/core/socket-io-server';
+import { SocketIOServer } from '../../core/socket-io-server';
 
 @Injectable()
 export class DockerTerminalService {

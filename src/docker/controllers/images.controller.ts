@@ -1,5 +1,5 @@
 import { Controller, Get, Logger, Response, HttpStatus, Body, Post } from '@nestjs/common';
-import { DockerService } from 'src/docker/services/docker.service';
+import { DockerService } from '../services/docker.service';
 import * as Docker from 'dockerode';
 
 @Controller('images')
@@ -51,13 +51,12 @@ export class ImagesController {
             options.name = body['name'];
         }
 
-        this.docker.createContainer(options, (err, info) => {
+        this.docker.createContainer(options, (err, container) => {
             if (err) {
                 res.json(err);
             } else {
-                res.json(HttpStatus.OK);
+                res.json({ statusCode: HttpStatus.OK, containerId: container.id });
             }
-            console.log(info);
         });
     }
 }

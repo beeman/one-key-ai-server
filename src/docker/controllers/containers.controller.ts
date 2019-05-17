@@ -1,13 +1,16 @@
 import { Controller, Get, Response, HttpStatus, Logger, Post, Body } from '@nestjs/common';
-import { DockerService } from 'src/docker/services/docker.service';
+import { DockerService } from '../services/docker.service';
 import * as Docker from 'dockerode';
-import { rename } from 'fs';
+import { ContainersDataService } from '../../data/containers/containers.service';
 
 @Controller('containers')
 export class ContainersController {
     private docker: Docker = null;
 
-    constructor(private readonly dockerService: DockerService) {
+    constructor(
+        private readonly dockerService: DockerService,
+        private readonly containersDataService: ContainersDataService
+    ) {
         this.docker = this.dockerService.getDocker();
     }
 
@@ -87,5 +90,15 @@ export class ContainersController {
                 res.json(HttpStatus.OK);
             }
         })
+    }
+
+    @Post('save-data')
+    async saveData(@Body() body) {
+        this.containersDataService.save(body.id, body.user);
+    }
+
+    @Post('remove-data')
+    async removeData(@Body() body) {
+        this.containersDataService.remove(body.id, body.user);
     }
 }

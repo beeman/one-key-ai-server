@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { SocketIOServer } from 'src/core/socket-io-server';
+import { SocketIOServer } from '../../core/socket-io-server';
 import * as Docker from 'dockerode';
 import { DockerService } from './docker.service';
 
