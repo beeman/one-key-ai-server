@@ -5,11 +5,11 @@ import { homedir } from 'os';
 import { FileService } from 'src/core/file.service';
 import { async } from 'rxjs/internal/scheduler/async';
 
-@Controller('upload')
-export class UploadController {
+@Controller('file')
+export class FileController {
     constructor(private readonly fileService: FileService) { }
 
-    @Post('')
+    @Post('upload')
     @UseInterceptors(FileInterceptor('file'))
     async upload(@UploadedFile() file, @Body() body) {
         if (!body.webkitRelativePath || !body.userName || file.length === 0) {

@@ -22,6 +22,14 @@ export class FileService {
         this.removeDirs(this.userDirsPath(userName));
     }
 
+    public readFileList(userName: string) {
+        const userPath = this.userDirsPath(userName);
+        const files = fs.readFileSync(userPath);
+        files.forEach((value, index) => {
+            Logger.log(value);
+            Logger.log(index);
+        });
+    }
 
     public userDirsPath(userName: string): string {
         return `${homedir()}/docker/projects/${userName}`;
@@ -49,13 +57,19 @@ export class FileService {
 
     private mkDirs(dirPath: string) {
         return new Promise((resolve, reject) => {
-            fs.mkdir(dirPath, { recursive: true }, err => {
-                if (err) {
-                    reject(err);
-                } else {
+            fs.exists(dirPath, exists => {
+                if (exists) {
                     resolve();
+                } else {
+                    fs.mkdir(dirPath, { recursive: true }, err => {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            resolve();
+                        }
+                    });
                 }
-            });
+            })
         });
     }
 
