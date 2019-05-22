@@ -1,7 +1,7 @@
 import { Controller, Get, Response, HttpStatus, Logger, Post, Body } from '@nestjs/common';
 import { DockerService } from '../services/docker.service';
 import * as Docker from 'dockerode';
-import { ContainersDataService } from '../../data/containers/containers.service';
+import { UsersService } from '../../data/users/users.service';
 
 @Controller('containers')
 export class ContainersController {
@@ -9,16 +9,31 @@ export class ContainersController {
 
     constructor(
         private readonly dockerService: DockerService,
-        private readonly containersDataService: ContainersDataService
+        private readonly userService: UsersService,
     ) {
         this.docker = this.dockerService.getDocker();
     }
 
-    @Get('info')
-    info(@Response() res) {
+    @Post('info')
+    async info(@Response() res, @Body() body) {
+        const userName = body['userName'];
+        const isAdmin = await this.userService.checkAdmin(userName);
+
         this.docker.listContainers({ all: true, size: true }, (err, containers: Docker.ContainerInfo[]) => {
             if (!err) {
-                res.status(HttpStatus.OK).json(containers);
+                let result: Docker.ContainerInfo[] = [];
+
+                if (isAdmin) {
+                    result = containers;
+                } else {
+                    containers.forEach(container => {
+                        if (container.Names[0] && container.Names[0].startsWith('/' + userName + '--')) {
+                            result.push(container);
+                        }
+                    });
+                }
+
+                res.status(HttpStatus.OK).json(result);
             } else {
                 res.json(err);
             }
@@ -26,7 +41,7 @@ export class ContainersController {
     }
 
     @Post('stop')
-    stop(@Response() res, @Body() body) {
+    async stop(@Response() res, @Body() body) {
         this.docker.getContainer(body['id']).stop((err) => {
             if (err) {
                 res.json(err);
@@ -37,7 +52,7 @@ export class ContainersController {
     }
 
     @Post('kill')
-    kill(@Response() res, @Body() body) {
+    async kill(@Response() res, @Body() body) {
         this.docker.getContainer(body['id']).kill((err) => {
             if (err) {
                 res.json(err);
@@ -48,7 +63,7 @@ export class ContainersController {
     }
 
     @Post('start')
-    start(@Response() res, @Body() body) {
+    async start(@Response() res, @Body() body) {
         const container = this.docker.getContainer(body['id']);
         container.start((err) => {
             if (err) {
@@ -60,7 +75,7 @@ export class ContainersController {
     }
 
     @Post('restart')
-    restart(@Response() res, @Body() body) {
+    async restart(@Response() res, @Body() body) {
         this.docker.getContainer(body['id']).restart((err) => {
             if (err) {
                 res.json(err);
@@ -71,7 +86,7 @@ export class ContainersController {
     }
 
     @Post('remove')
-    remove(@Response() res, @Body() body) {
+    async remove(@Response() res, @Body() body) {
         this.docker.getContainer(body['id']).remove((err) => {
             if (err) {
                 res.json(err);
@@ -82,7 +97,7 @@ export class ContainersController {
     }
 
     @Post('rename')
-    rename(@Response() res, @Body() body) {
+    async rename(@Response() res, @Body() body) {
         this.docker.getContainer(body['id']).rename({ name: body['name'] }, (err) => {
             if (err) {
                 res.json(err);
@@ -92,13 +107,13 @@ export class ContainersController {
         })
     }
 
-    @Post('save-data')
-    async saveData(@Body() body) {
-        this.containersDataService.save(body.id, body.user);
-    }
+    // @Post('save-data')
+    // async saveData(@Body() body) {
+    //     this.containersDataService.save(body.id, body.user);
+    // }
 
-    @Post('remove-data')
-    async removeData(@Body() body) {
-        this.containersDataService.remove(body.id, body.user);
-    }
+    // @Post('remove-data')
+    // async removeData(@Body() body) {
+    //     this.containersDataService.remove(body.id, body.user);
+    // }
 }

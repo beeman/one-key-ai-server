@@ -6,10 +6,11 @@ import { DockerTerminalService } from './services/docker-terminal.service';
 import { DockerContainerStatsService } from './services/docker-container-stats.service';
 import { CoreModule } from '../core/core.module';
 import { DataModule } from 'src/data/data.module';
+import { UploadController } from './controllers/upload.controller';
 
 @Module({
     imports: [CoreModule, DataModule],
     providers: [DockerService, DockerTerminalService, DockerContainerStatsService],
-    controllers: [ImagesController, ContainersController],
+    controllers: [ImagesController, ContainersController, UploadController],
 })
 export class DockerModule { }

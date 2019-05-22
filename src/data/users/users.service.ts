@@ -3,17 +3,20 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Repository, FindConditions, UpdateResult } from 'typeorm';
 import * as md5 from 'js-md5';
+import { FileService } from 'src/core/file.service';
 
 @Injectable()
 export class UsersService {
     constructor(
         @InjectRepository(User)
-        private readonly userRepository: Repository<User>
+        private readonly userRepository: Repository<User>,
+        private fileService: FileService
     ) {
         // 若存储库为空，则插入默认值
         this.userRepository.count().then((value) => {
             if (value <= 0) {
-                this.userRepository.insert(new User('admin', md5('robot'), true));
+                this.addUser('admin', md5('robot'), true);
+                // this.userRepository.insert(new User('admin', md5('robot'), true));
             }
         });
     }
@@ -23,8 +26,8 @@ export class UsersService {
         if (user) {
             return '用户已存在';
         } else {
-            this.userRepository.save(new User(name, md5(password), isAdmin));
-            return null;
+            this.userRepository.save(new User(name, md5(password), isAdmin));   //保存用户信息到数据库
+            return this.fileService.mkUserDirs(name);  // 创建用户目录
         }
     }
 
@@ -33,9 +36,9 @@ export class UsersService {
         if (!user) {
             return '不存在该用户';
         } else {
-            user.isAdmin=isAdmin;
-            if(password){
-                user.password=md5(password);
+            user.isAdmin = isAdmin;
+            if (password) {
+                user.password = md5(password);
             }
             this.userRepository.save(user);
             return null;
@@ -43,6 +46,7 @@ export class UsersService {
     }
 
     async deleteUser(name: string) {
+        this.fileService.removeUserDirs(name);
         return this.userRepository.delete({ name: name });
     }
 
