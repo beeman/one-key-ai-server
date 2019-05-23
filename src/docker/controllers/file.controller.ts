@@ -1,9 +1,5 @@
-import { Controller, Post, Logger, UploadedFiles, Body, HttpException, HttpStatus, UseInterceptors, FilesInterceptor, FileInterceptor, UploadedFile } from '@nestjs/common';
-import { createWriteStream } from 'fs';
-import { join } from 'path';
-import { homedir } from 'os';
+import { Controller, Post, Body, HttpException, HttpStatus, UseInterceptors, FileInterceptor, UploadedFile, Response } from '@nestjs/common';
 import { FileService } from 'src/core/file.service';
-import { async } from 'rxjs/internal/scheduler/async';
 
 @Controller('file')
 export class FileController {
@@ -22,6 +18,17 @@ export class FileController {
         } catch (err) {
             return { msg: 'error', data: err };
         }
+    }
+
+    @Post('list')
+    async list(@Response() rep, @Body() body) {
+        this.fileService.readUserProject(body.userName)
+            .then(value => {
+                rep.json({ msg: 'ok', data: value });
+            })
+            .catch(reason => {
+                rep.json({ msg: 'err', data: reason });
+            });
     }
 
 }

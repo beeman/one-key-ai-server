@@ -12,6 +12,13 @@ interface UploadFile {
     size: number
 }
 
+interface FileNode {
+    title?: string;
+    key?: string;
+    isLeaf?: boolean;
+    children?: FileNode[];
+}
+
 @Injectable()
 export class FileService {
     public mkUserDirs(userName: string) {
@@ -22,13 +29,11 @@ export class FileService {
         this.removeDirs(this.userDirsPath(userName));
     }
 
-    public readFileList(userName: string) {
+    public async readUserProject(userName: string) {
+        let result: FileNode = { title: 'projects', key: '0', isLeaf: false, children: [] };
         const userPath = this.userDirsPath(userName);
-        const files = fs.readFileSync(userPath);
-        files.forEach((value, index) => {
-            Logger.log(value);
-            Logger.log(index);
-        });
+        this.readFileList(userPath, result);
+        return result;
     }
 
     public userDirsPath(userName: string): string {
@@ -87,5 +92,24 @@ export class FileService {
             });
             fs.rmdirSync(path);
         }
+    }
+
+    private readFileList(filePath: string, result: FileNode) {
+        const files = fs.readdirSync(filePath);
+        files.forEach((value, index) => {
+            const childPath = path.join(filePath, value);
+            const stats = fs.statSync(childPath);
+            const child: FileNode = {};
+            child.title = path.parse(childPath).base;
+            child.key = result.key + '-' + index;
+            if (stats.isDirectory()) {
+                child.isLeaf = false;
+                child.children = [];
+                this.readFileList(childPath, child);
+            } else {
+                child.isLeaf = true;
+            }
+            result.children.push(child);
+        });
     }
 }
