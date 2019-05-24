@@ -30,8 +30,8 @@ export class FileService {
     }
 
     public async readUserProject(userName: string) {
-        let result: FileNode = { title: 'projects', key: '0', isLeaf: false, children: [] };
         const userPath = this.userDirsPath(userName);
+        let result: FileNode = { title: 'projects', key: userPath, isLeaf: false, children: [] };
         this.readFileList(userPath, result);
         return result;
     }
@@ -101,7 +101,7 @@ export class FileService {
             const stats = fs.statSync(childPath);
             const child: FileNode = {};
             child.title = path.parse(childPath).base;
-            child.key = result.key + '-' + index;
+            child.key = childPath;
             if (stats.isDirectory()) {
                 child.isLeaf = false;
                 child.children = [];
