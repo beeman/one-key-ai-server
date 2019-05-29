@@ -2,6 +2,7 @@ import { Controller, Get, Response, HttpStatus, Logger, Post, Body } from '@nest
 import { DockerService } from '../services/docker.service';
 import * as Docker from 'dockerode';
 import { UsersService } from '../../data/users/users.service';
+import { DockerTerminalService } from '../services/docker-terminal.service';
 
 @Controller('containers')
 export class ContainersController {
@@ -10,6 +11,7 @@ export class ContainersController {
     constructor(
         private readonly dockerService: DockerService,
         private readonly userService: UsersService,
+        private readonly dockerTerminalService: DockerTerminalService
     ) {
         this.docker = this.dockerService.getDocker();
     }
@@ -105,6 +107,15 @@ export class ContainersController {
                 res.json(HttpStatus.OK);
             }
         })
+    }
+
+    @Post('shell-length')
+    async shellLength(@Response() res, @Body() body) {
+        if (body['id']) {
+            res.json({ msg: 'ok', data: this.dockerTerminalService.shellLength(body['id']) });
+        } else {
+            res.json(HttpStatus.BAD_REQUEST);
+        }
     }
 
     // @Post('save-data')

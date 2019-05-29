@@ -15,8 +15,8 @@ export class UsersService {
         // 若存储库为空，则插入默认值
         this.userRepository.count().then((value) => {
             if (value <= 0) {
-                this.addUser('admin', md5('robot'), true);
-                // this.userRepository.insert(new User('admin', md5('robot'), true));
+                // this.addUser('admin', md5('robot'), true);
+                this.userRepository.insert(new User('admin', md5('robot'), true));
             }
         });
     }
