@@ -1,6 +1,5 @@
 import { Controller, Logger } from '@nestjs/common';
 import * as io from 'socket.io';
-import { PerformanceService } from './performance/performance.service';
 import { DriverService } from './driver/driver.service';
 
 
@@ -14,14 +13,14 @@ import { DriverService } from './driver/driver.service';
  */
 @Controller('info')
 export class InfoController {
-    constructor(private readonly performanceService: PerformanceService,
+    constructor(
         private readonly driverService: DriverService) {
         const server = io(3001);
 
-        // 发送top信息至客户端
-        this.performanceService.getData().subscribe((data) => {
-            server.emit('topInfo', data);
-        });
+        // // 发送top信息至客户端
+        // this.performanceService.getData().subscribe((data) => {
+        //     server.emit('topInfo', data);
+        // });
 
         // 监听连接事件
         server.on('connection', (socket: io.Socket) => {
