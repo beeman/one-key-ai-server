@@ -10,7 +10,7 @@ export class ProcessService {
 
     public executeWithCheck(command: string, args?: ReadonlyArray<string>, options?: SpawnOptions): Observable<ProcessResultType> {
         return new Observable(observer => {
-            this.existCommand(command).subscribe(value => {
+            this.existCommand(command).then(value => {
                 if (!value) {
                     observer.next({ type: 'not exist', value: command });
                     observer.complete();
@@ -45,20 +45,35 @@ export class ProcessService {
         });
     }
 
-    private existCommand(command: string): Observable<boolean> {
+    // private existCommand(command: string): Observable<boolean> {
+    //     const process = spawn('which', [command]);
+
+    //     return new Observable(observer => {
+    //         this.execute(process).subscribe(
+    //             value => {
+    //                 if (value.type === 'stdout') {
+    //                     observer.next(true);
+    //                 } else {
+    //                     observer.next(false);
+    //                 }
+    //                 observer.complete();
+    //             },
+    //         );
+    //     });
+    // }
+
+    public existCommand(command: string): Promise<boolean> {
         const process = spawn('which', [command]);
 
-        return new Observable(observer => {
-            this.execute(process).subscribe(
-                value => {
-                    if (value.type === 'stdout') {
-                        observer.next(true);
-                    } else {
-                        observer.next(false);
-                    }
-                    observer.complete();
-                },
-            );
+        return new Promise((resolve, reject) => {
+            process.stdout.on('data', () => {
+                process.kill();
+                resolve(true);
+            });
+            process.stderr.on('data', () => {
+                process.kill();
+                resolve(false);
+            });
         });
     }
 }
