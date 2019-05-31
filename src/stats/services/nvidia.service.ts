@@ -14,6 +14,10 @@ export class NvidiaService {
         private readonly processService: ProcessService
     ) {
         this.initListener();
+        this.initServer();
+    }
+
+    private initServer(): void {
         SocketIOServer.getInstance().on('connection', client => {
             client.on('nvidiaStats', () => {
                 // 建立连接时发送数据
@@ -36,7 +40,7 @@ export class NvidiaService {
                     this.eventEmitter.removeListener('err', onError);
                 });
             });
-        })
+        });
     }
 
     private async initListener() {
@@ -73,7 +77,6 @@ export class NvidiaService {
                     logs = '';
                 });
             }
-
 
             // this.eventEmitter.emit('data', chunk.toString());
         });
