@@ -1,7 +1,8 @@
 import { Controller, Get, Logger, Response, HttpStatus, Body, Post } from '@nestjs/common';
 import { DockerService } from '../services/docker.service';
 import * as Docker from 'dockerode';
-import { FileService } from 'src/core/file.service';
+import { FileService } from '../../core/file.service';
+import { ConfigService } from '../../core/config.service';
 
 @Controller('images')
 export class ImagesController {
@@ -9,7 +10,8 @@ export class ImagesController {
 
     constructor(
         private readonly dockerService: DockerService,
-        private readonly fileService: FileService
+        private readonly fileService: FileService,
+        private readonly configService: ConfigService
     ) {
         this.docker = this.dockerService.getDocker();
     }
@@ -42,7 +44,6 @@ export class ImagesController {
         const name: string = body['name'];
         const isNvidia: boolean = body['isNvidia'];
         const runtime = isNvidia ? 'nvidia' : null;
-        Logger.log(runtime);
         const userName = name.split('--')[0];
         if (!userName) {
             res.json({ statusCode: HttpStatus.FORBIDDEN, reason: '容器名错误' });
@@ -51,6 +52,7 @@ export class ImagesController {
         const volumes = this.fileService.userDirsPath(userName);
         const options: Docker.ContainerCreateOptions = {
             Image: body['id'],
+            Hostname: userName,
             AttachStdin: false,
             AttachStdout: false,
             AttachStderr: false,
@@ -61,7 +63,9 @@ export class ImagesController {
             HostConfig: {
                 PublishAllPorts: true,
                 Binds: [`${volumes}:/projects`],
-                Runtime: runtime
+                Runtime: runtime,
+                Memory: this.configService.getDockerMemoryLimit(),
+                MemorySwap: this.configService.getDockerMemorySwap()
             },
         };
         if (body['name']) {

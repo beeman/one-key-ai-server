@@ -35,7 +35,6 @@ export class NvidiaService {
                 this.eventEmitter.on('err', onError);
 
                 client.on('disconnect', () => {
-                    Logger.log('disconnect');
                     this.eventEmitter.removeListener('data', onData);
                     this.eventEmitter.removeListener('err', onError);
                 });

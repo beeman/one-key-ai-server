@@ -1,0 +1,6 @@
+{
+    "docker": {
+        "memory-limit": 8589934592,
+        "memory-swap": 0
+    }
+}

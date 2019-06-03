@@ -15,7 +15,7 @@ import { StatsModule } from './stats/stats.module';
     AuthModule,
     TypeOrmModule.forRoot({
       type: 'sqlite',
-      database: 'save/ai.db',
+      database: 'data/ai.db',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
