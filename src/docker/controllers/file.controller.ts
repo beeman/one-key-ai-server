@@ -1,5 +1,5 @@
 import { Controller, Post, Body, HttpException, HttpStatus, UseInterceptors, FileInterceptor, UploadedFile, Response } from '@nestjs/common';
-import { FileService } from 'src/core/file.service';
+import { FileService } from '../../core/file.service';
 import * as path from 'path';
 import { async } from 'rxjs/internal/scheduler/async';
 

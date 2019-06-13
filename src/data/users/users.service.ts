@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Repository, FindConditions, UpdateResult } from 'typeorm';
 import * as md5 from 'js-md5';
-import { FileService } from 'src/core/file.service';
+import { FileService } from '../../core/file.service';
 
 @Injectable()
 export class UsersService {
@@ -52,7 +52,11 @@ export class UsersService {
 
     async checkAdmin(userName: string): Promise<boolean> {
         const user = await this.userRepository.findOne({ where: { name: userName } });
-        return user.isAdmin;
+        if (user) {
+            return user.isAdmin;
+        } else {
+            return false;
+        }
     }
 
     async getAllUsers(): Promise<User[]> {

@@ -7,7 +7,7 @@ export class ConfigService {
     private config: any;
 
     constructor() {
-        const data = fs.readFileSync(path.join(__dirname, 'config.json'));
+        const data = fs.readFileSync(path.join(__dirname, '../assets/config.json'));
         this.config = JSON.parse(data.toString());
     }
 

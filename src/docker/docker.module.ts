@@ -5,7 +5,7 @@ import { DockerService } from './services/docker.service';
 import { DockerTerminalService } from './services/docker-terminal.service';
 import { DockerContainerStatsService } from './services/docker-container-stats.service';
 import { CoreModule } from '../core/core.module';
-import { DataModule } from 'src/data/data.module';
+import { DataModule } from '../data/data.module';
 import { FileController } from './controllers/file.controller';
 
 @Module({

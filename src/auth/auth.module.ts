@@ -3,7 +3,7 @@ import { AuthService } from './auth.service';
 import { HttpStrategy } from './http.strategy';
 import { PassportModule } from '@nestjs/passport';
 import { AuthController } from './auth.controller';
-import { DataModule } from 'src/data/data.module';
+import { DataModule } from '../data/data.module';
 
 @Module({
   imports: [
