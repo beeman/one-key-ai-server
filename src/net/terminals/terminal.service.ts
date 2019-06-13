@@ -1,16 +1,32 @@
 import { Injectable, Logger } from '@nestjs/common';
-import * as nodejsWebsocket from 'nodejs-websocket';
 import * as pty from 'node-pty';
+import { SocketIOServer } from '../../core/socket-io-server';
+import * as io from 'socket.io';
 
 @Injectable()
-export class TerminalManager {
+export class TerminalService {
     private terminals: { [pid: string]: pty.IPty } = {};
     private logs: { [pid: string]: string } = {};
 
+    constructor() {
+        this.createServer();
+    }
+
     public createServer(): void {
-        nodejsWebsocket.createServer((conn) => {
-            this.connectTerminal(conn);
-        }).listen(3002);
+        SocketIOServer.getInstance().on('connection', client => {
+            client.on('terminal', (data) => {
+                let term = this.terminals[parseInt(data['pid'], 10)];
+                if (!term) {
+                    const pid = this.createTerminal(data['rows'], data['cols']);
+                    term = this.terminals[parseInt(pid, 10)];
+                    client.emit('pid', pid);
+                } else {
+                    client.emit('data', this.logs[term.pid]);
+                }
+
+                this.connectTerminal(client, term);
+            });
+        });
     }
 
     public createTerminal(rows: number, cols: number): string {
@@ -31,17 +47,7 @@ export class TerminalManager {
         return term.pid.toString();
     }
 
-    private connectTerminal(conn): void {
-        const path = conn.path ? conn.path as string : '';
-        const params = path.trim().split('/');
-        if (params[1] !== 'terminals') {
-            return;
-        }
-        const pid = params[2];
-
-        const term = this.terminals[parseInt(pid, 10)];
-        conn.send(this.logs[term.pid]);
-
+    private connectTerminal(socket: io.Socket, term): void {
         function buffer(socket, timeout) {
             let s = '';
             let sender = null;
@@ -49,32 +55,33 @@ export class TerminalManager {
                 s += data;
                 if (!sender) {
                     sender = setTimeout(() => {
-                        socket.send(s);
+                        socket.emit('data', s);
                         s = '';
                         sender = null;
                     }, timeout);
                 }
             };
         }
-        const send = buffer(conn, 5);
+        const send = buffer(socket, 5);
 
         term.on('data', (data) => {
             try {
                 send(data);
+                // socket.emit('data', data);
             } catch (ex) {
                 // The WebSocket is not open, ignore
             }
         });
-        conn.on('text', (msg) => {
+        socket.on('data', (msg) => {
             term.write(msg);
         });
-        conn.on('close', () => {
+        socket.on('disconnect', () => {
             term.kill();
             // Clean things up
             delete this.terminals[term.pid];
             delete this.logs[term.pid];
         });
-        conn.on('error', (code, reason) => {
+        socket.on('error', (code, reason) => {
             Logger.error(`code: ${code}; reason: ${reason}`);
         });
     }

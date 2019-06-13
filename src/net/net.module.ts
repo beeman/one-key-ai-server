@@ -1,14 +1,15 @@
 import { Module } from '@nestjs/common';
 import { DriverService } from './info/driver/driver.service';
 import { ProcessService } from '../core/process/process.service';
-import { TerminalsController } from './terminals/terminals.controller';
 import { InfoController } from './info/info.controller';
+import { TerminalService } from './terminals/terminal.service';
 
 @Module({
-  controllers: [TerminalsController, InfoController],
+  controllers: [InfoController],
   providers: [
     DriverService,
     ProcessService,
-    ],
+    TerminalService,
+  ],
 })
 export class NetModule { }
