@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { SocketIOServer } from '../../core/socket-io-server';
-import { ProcessService } from '../../core/process/process.service';
+import { ProcessService } from '../../core/process.service';
 import { spawn } from 'child_process';
 import { EventEmitter } from 'events';
 import * as xml from 'xml2js';
@@ -80,7 +80,7 @@ export class NvidiaService {
             // this.eventEmitter.emit('data', chunk.toString());
         });
         process.stdout.on('end', () => {
-            Logger.log('end');
+            // Logger.log('end');
         })
         process.stderr.on('data', (chunk) => {
             this.eventEmitter.emit('err', chunk.toString());

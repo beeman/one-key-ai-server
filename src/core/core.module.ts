@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ProcessService } from './process/process.service';
+import { ProcessService } from './process.service';
 import { FileService } from './file.service';
 import { ConfigService } from './config.service';
 

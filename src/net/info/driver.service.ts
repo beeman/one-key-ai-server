@@ -1,26 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { ProcessService } from '../../../core/process/process.service';
-import { map } from 'rxjs/operators';
-import { ProcessResultType } from '../../../core/process/process-result-type';
+import { ProcessService } from '../../core/process.service';
+import { exec } from 'child_process';
 
 @Injectable()
 export class DriverService {
-
-    private readonly tag = DriverService.name;
-
-    constructor(private readonly processService: ProcessService) {
-    }
-
-    /**
-     * 自动安装推荐驱动
-     *
-     * @returns
-     * @memberof DriverService
-     */
-    public autoinstall() {
-        // const process = spawn('ubuntu-drivers', ['autoinstall']);
-        return this.processService.executeWithCheck('ubuntu-drivers', ['autoinstall']);
-    }
+    constructor(private readonly processService: ProcessService) { }
 
     /**
      * 获取已安装驱动列表
@@ -28,17 +12,24 @@ export class DriverService {
      * @returns
      * @memberof DriverService
      */
-    public getList() {
-        // const process = spawn('ubuntu-drivers', ['list']);
-        return this.processService.executeWithCheck('ubuntu-drivers', ['list']).pipe(
-            map((value): ProcessResultType => {
-                if (value.type === 'stdout') {
-                    return { type: value.type, value: value.value.trim().split('\n') };
+    public async getList(): Promise<string[]> {
+        const exists = await this.processService.existCommand('ubuntu-drivers');
+        if (!exists) {
+            return null;
+        }
+
+        return new Promise((resolve, reject) => {
+            exec('ubuntu-drivers list', (error, stdout, stderr) => {
+                if (error || stderr) {
+                    resolve(null);
+                } else {
+                    resolve(stdout.trim().split('\n'));
                 }
-                return value;
-            }),
-        );
+            });
+        });
     }
+
+
 
     /**
      * 获取驱动信息
@@ -46,17 +37,21 @@ export class DriverService {
      * @returns
      * @memberof DriverService
      */
-    public getDevices() {
-        // const process = spawn('ubuntu-drivers', ['devices']);
-        return this.processService.executeWithCheck('ubuntu-drivers', ['devices']).pipe(
-            map(value => {
-                if (value.type === 'stdout') {
-                    value.value = this.parseDevices(value.value);
-                    return value;
+    public async getDevices(): Promise<any> {
+        const exists = await this.processService.existCommand('ubuntu-drivers');
+        if (!exists) {
+            return null;
+        }
+
+        return new Promise((resolve, reject) => {
+            exec('ubuntu-drivers devices', (error, stdout, stderr) => {
+                if (error || stderr) {
+                    resolve(null);
+                } else {
+                    resolve(this.parseDevices(stdout));
                 }
-                return value;
-            }),
-        );
+            });
+        });
     }
 
     /**

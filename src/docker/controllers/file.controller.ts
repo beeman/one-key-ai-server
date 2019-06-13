@@ -10,8 +10,6 @@ export class FileController {
     @Post('upload')
     @UseInterceptors(FileInterceptor('file'))
     async upload(@UploadedFile() file, @Body() body) {
-        console.log(file);
-        console.log(body);
         if (file.length === 0 || (!body.userName && (!body.dirPath || !body.fileName))) {
             throw new HttpException('请求参数错误.', HttpStatus.FORBIDDEN)
         }

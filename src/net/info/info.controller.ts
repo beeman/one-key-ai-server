@@ -1,6 +1,7 @@
-import { Controller, Logger } from '@nestjs/common';
+import { Controller, Logger, Post } from '@nestjs/common';
 import * as io from 'socket.io';
-import { DriverService } from './driver/driver.service';
+import { DriverService } from './driver.service';
+import { async } from 'rxjs/internal/scheduler/async';
 
 
 /**
@@ -13,32 +14,25 @@ import { DriverService } from './driver/driver.service';
  */
 @Controller('info')
 export class InfoController {
-    constructor(
-        private readonly driverService: DriverService) {
-        const server = io(3001);
+    constructor(private readonly driverService: DriverService) { }
 
-        // // 发送top信息至客户端
-        // this.performanceService.getData().subscribe((data) => {
-        //     server.emit('topInfo', data);
-        // });
+    @Post('driver-list')
+    async  driverList() {
+        const drivers = await this.driverService.getList();
+        if (drivers) {
+            return { msg: 'ok', data: drivers };
+        } else {
+            return { msg: '未能找到驱动信息' };
+        }
+    }
 
-        // 监听连接事件
-        server.on('connection', (socket: io.Socket) => {
-            socket.on('autoinstall', () => {
-                this.driverService.autoinstall().subscribe(value => {
-                    socket.emit('autoinstall', value);
-                });
-            });
-            socket.on('driverDevices', () => {
-                this.driverService.getDevices().subscribe(value => {
-                    socket.emit('driverDevices', value);
-                });
-            });
-            socket.on('driverList', () => {
-                this.driverService.getList().subscribe(value => {
-                    socket.emit('driverList', value);
-                });
-            });
-        });
+    @Post('driver-devices')
+    async  driverDevices() {
+        const drivers = await this.driverService.getDevices();
+        if (drivers) {
+            return { msg: 'ok', data: drivers };
+        } else {
+            return { msg: '未能找到驱动信息' };
+        }
     }
 }

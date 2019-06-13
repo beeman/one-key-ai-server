@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { DriverService } from './info/driver/driver.service';
-import { ProcessService } from '../core/process/process.service';
+import { DriverService } from './info/driver.service';
+import { ProcessService } from '../core/process.service';
 import { InfoController } from './info/info.controller';
 import { TerminalService } from './terminals/terminal.service';
 
