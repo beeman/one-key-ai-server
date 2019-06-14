@@ -1,7 +1,7 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
-import { Repository, FindConditions, UpdateResult } from 'typeorm';
+import { Repository } from 'typeorm';
 import * as md5 from 'js-md5';
 import { FileService } from '../../core/file.service';
 
