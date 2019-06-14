@@ -80,4 +80,16 @@ export class ImagesController {
             }
         });
     }
+
+    @Post('search')
+    search(@Response() res, @Body() body) {
+        const name = body['name'];
+        this.docker.searchImages({ term: name }, (err, data) => {
+            if (err) {
+                res.json({ msg: 'error', data: err });
+            } else {
+                res.json({ msg: 'ok', data: data });
+            }
+        });
+    }
 }
