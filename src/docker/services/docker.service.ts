@@ -26,6 +26,11 @@ export class DockerService {
         this.docker.pull(name, null, (err, stream) => {
             if (err) {
                 socket.emit('err', err);
+                return;
+            }
+            if(!stream){
+                socket.emit('err', 'not find stream');
+                return;
             }
             this.docker.modem.followProgress(stream, onFinished, onProgress);
 

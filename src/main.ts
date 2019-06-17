@@ -3,9 +3,10 @@ import { AppModule } from './app.module';
 import { join } from 'path';
 import { renderFile } from 'ejs';
 import { SocketIOServer } from './core/socket-io-server';
+import * as fs from 'fs';
+import * as path from 'path';
 
-
-const port = 3000;
+let port = 80;
 
 // openBrowser(port);
 
@@ -20,6 +21,9 @@ async function bootstrap() {
   app.engine('html', renderFile);
   app.set('view engine', 'html');
 
+  const data = fs.readFileSync(path.join(__dirname, 'assets/config.json'));
+  const config = JSON.parse(data.toString());
+  port = config.port ? config.port : port;
   // app.useWebSocketAdapter(new WsAdapter(app));
 
   SocketIOServer.getInstance().listen(app.getHttpServer());
