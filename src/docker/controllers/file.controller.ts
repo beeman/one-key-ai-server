@@ -92,4 +92,15 @@ export class FileController {
             rep.json({ msg: 'err', data: err });
         }
     }
+
+    @Post('root-path')
+    async rootPath(@Response() rep) {
+        try {
+            const path = this.fileService.dockerRootPath();
+            rep.json({ msg: 'ok', data: path });
+        } catch (err) {
+            rep.json({ msg: 'err', data: err });
+        }
+    }
+
 }

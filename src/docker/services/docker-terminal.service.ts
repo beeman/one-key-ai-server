@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import * as io from 'socket.io';
 import { DockerService } from './docker.service';
 import * as Docker from 'dockerode';

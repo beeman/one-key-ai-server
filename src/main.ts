@@ -5,6 +5,7 @@ import { renderFile } from 'ejs';
 import { SocketIOServer } from './core/socket-io-server';
 import * as fs from 'fs';
 import * as path from 'path';
+import { homedir } from 'os';
 
 let port = 80;
 
@@ -17,7 +18,9 @@ async function bootstrap() {
   app.enableCors();
 
   app.useStaticAssets(join(__dirname, '..', 'one-key-ai-client/'));
+  app.useStaticAssets(join(homedir(), 'docker'));
   app.setBaseViewsDir(join(__dirname, '..', 'one-key-ai-client/')); // 放视图的文件
+  // app.setBaseViewsDir(join(__dirname, '..', 'docker'));
   app.engine('html', renderFile);
   app.set('view engine', 'html');
 

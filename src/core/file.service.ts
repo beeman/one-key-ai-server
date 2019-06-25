@@ -87,8 +87,12 @@ export class FileService {
         }
     }
 
+    public dockerRootPath(): string {
+        return `${homedir()}/docker`;
+    }
+
     public userDirsPath(userName: string): string {
-        return `${homedir()}/docker/projects/${userName}`;
+        return `${this.dockerRootPath()}/projects/${userName}`;
     }
 
     public saveAbsoluteFile(absolutePath: string, file: UploadFile) {
