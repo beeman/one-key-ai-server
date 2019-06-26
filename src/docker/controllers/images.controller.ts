@@ -20,9 +20,9 @@ export class ImagesController {
     info(@Response() res) {
         this.docker.listImages((err, images) => {
             if (!err) {
-                res.json(images);
+                res.json({ msg: 'ok', data: images });
             } else {
-                res.json(err);
+                res.json({ msg: 'err', data: err });
             }
         });
     }

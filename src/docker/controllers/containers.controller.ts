@@ -35,9 +35,10 @@ export class ContainersController {
                     });
                 }
 
-                res.status(HttpStatus.OK).json(result);
+                res.json({ msg: 'ok', data: result });
+                // res.status(HttpStatus.OK).json(result);
             } else {
-                res.json(err);
+                res.json({ msg: 'err', data: err });
             }
         });
     }
