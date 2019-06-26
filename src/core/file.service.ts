@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import * as fs from 'fs';
 import { homedir } from 'os';
 import * as path from 'path';
+import * as compressing from 'compressing';
 
 interface UploadFile {
     fieldname: string,
@@ -21,6 +22,20 @@ interface FileNode {
 
 @Injectable()
 export class FileService {
+    public compress(filePath: string, isFile: boolean) {
+        const parsedPath = path.parse(filePath);
+
+        if (isFile) {
+            return compressing.zip.compressDir(filePath, path.join(parsedPath.dir, parsedPath.name + '.zip'));
+        } else {
+            return compressing.zip.compressDir(filePath, path.join(parsedPath.dir, parsedPath.name + '.zip'));
+        }
+    }
+
+    public dockerRootPath(): string {
+        return `${homedir()}/docker`;
+    }
+
     public mkUserDirs(userName: string) {
         return this.mkDirsSync(this.userDirsPath(userName));
     }
@@ -87,8 +102,9 @@ export class FileService {
         }
     }
 
-    public dockerRootPath(): string {
-        return `${homedir()}/docker`;
+    public uncompress(filePath: string): Promise<void> {
+        const parsedPath = path.parse(filePath);
+        return compressing.zip.uncompress(filePath, parsedPath.dir);
     }
 
     public userDirsPath(userName: string): string {

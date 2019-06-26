@@ -1,7 +1,6 @@
 import { Controller, Post, Body, HttpException, HttpStatus, UseInterceptors, FileInterceptor, UploadedFile, Response } from '@nestjs/common';
 import { FileService } from '../../core/file.service';
 import * as path from 'path';
-import { async } from 'rxjs/internal/scheduler/async';
 
 @Controller('file')
 export class FileController {
@@ -103,4 +102,33 @@ export class FileController {
         }
     }
 
+    @Post('compress')
+    async compress(@Response() rep, @Body() body) {
+        try {
+            this.fileService.compress(body['path'], body['isFile'])
+                .then(() => {
+                    rep.json({ 'msg': 'ok' });
+                })
+                .catch((reason) => {
+                    rep.json({ msg: 'err', data: reason });
+                });
+        } catch (err) {
+            rep.json({ msg: 'err', data: err });
+        }
+    }
+
+    @Post('uncompress')
+    async uncompress(@Response() rep, @Body() body) {
+        try {
+            this.fileService.uncompress(body['path'])
+                .then(() => {
+                    rep.json({ 'msg': 'ok' });
+                })
+                .catch((reason) => {
+                    rep.json({ msg: 'err', data: reason });
+                });
+        } catch (err) {
+            rep.json({ msg: 'err', data: err });
+        }
+    }
 }
