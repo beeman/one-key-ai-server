@@ -215,7 +215,7 @@ export class DockerTerminalService {
                 socket.emit('err', err);
                 return;
             }
-            // stream.write('cd /projects\nclear\n');
+            stream.write('cd /projects\nclear\n');
 
             const shellSocket = new ShellSocket(stream, socket, exec);
             this.containerShell.addShellSocket(containerId, shellSocket);
