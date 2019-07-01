@@ -101,7 +101,7 @@ export class ContainersController {
 
     @Post('rename')
     async rename(@Response() res, @Body() body) {
-        this.docker.getContainer(body['id']).rename({ name: body['name'] }, (err) => {
+        this.docker.getContainer(body['id']).rename({ name: body['userName'] + '--' + body['name'] }, (err) => {
             if (err) {
                 res.json(err);
             } else {

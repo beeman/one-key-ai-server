@@ -45,14 +45,15 @@ export class ImagesController {
         const isNvidia: boolean = body['isNvidia'];
         const runtime = isNvidia ? 'nvidia' : null;
         const userName = name.split('--')[0];
-        if (!userName) {
+        const containerName = name.split('--')[1];
+        if (!userName || !containerName) {
             res.json({ statusCode: HttpStatus.FORBIDDEN, reason: '容器名错误' });
             return;
         }
         const volumes = this.fileService.userDirsPath(userName);
         const options: Docker.ContainerCreateOptions = {
             Image: body['id'],
-            Hostname: userName,
+            Hostname: containerName,
             AttachStdin: false,
             AttachStdout: false,
             AttachStderr: false,
