@@ -46,6 +46,12 @@ export class ImagesController {
         const runtime = isNvidia ? 'nvidia' : null;
         const userName = name.split('--')[0];
         const containerName = name.split('--')[1];
+        const exposedPorts = {};
+        body['ports'].forEach((value: number) => {
+            if (value !== null) {
+                exposedPorts[`${value}/tcp`] = {};
+            }
+        });
         if (!userName || !containerName) {
             res.json({ statusCode: HttpStatus.FORBIDDEN, reason: '容器名错误' });
             return;
@@ -57,6 +63,7 @@ export class ImagesController {
             AttachStdin: false,
             AttachStdout: false,
             AttachStderr: false,
+            ExposedPorts: exposedPorts,
             Volumes: {
                 '/projects': {}
             },
