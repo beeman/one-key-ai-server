@@ -64,7 +64,7 @@ export class ImagesController {
             AttachStdout: false,
             AttachStderr: false,
             ExposedPorts: exposedPorts,
-            Env:['NVIDIA_VISIBLE_DEVICES=0'],
+            // Env:['NVIDIA_VISIBLE_DEVICES=0'],
             Volumes: {
                 '/projects': {}
             },
