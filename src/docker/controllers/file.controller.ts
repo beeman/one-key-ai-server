@@ -20,9 +20,9 @@ export class FileController {
                     this.fileService.saveAbsoluteFile(path.join(body.dirPath, body.fileName), file);
                 }
             } else if (body.userName && body.webkitRelativePath) {
-                this.fileService.saveFile(body.userName, body.webkitRelativePath, file);
+                this.fileService.saveFile(body.userName, body.webkitRelativePath, file.buffer);
             } else if (body.userName && body.fileName) {
-                this.fileService.saveFile(body.userName, body.fileName, file);
+                this.fileService.saveFile(body.userName, body.fileName, file.buffer);
             }
             return { msg: 'ok', data: file.originalname };
         } catch (err) {
@@ -128,6 +128,26 @@ export class FileController {
                 .catch((reason) => {
                     rep.json({ msg: 'err', data: reason });
                 });
+        } catch (err) {
+            rep.json({ msg: 'err', data: err });
+        }
+    }
+
+    @Post('open-file')
+    async openFile(@Response() rep, @Body() body) {
+        try {
+            const content = this.fileService.getFileContent(body['path']);
+            rep.json({ msg: 'ok', data: content.toString() });
+        } catch (err) {
+            rep.json({ msg: 'err', data: err });
+        }
+    }
+
+    @Post('save-file')
+    async saveFile(@Response() rep, @Body() body) {
+        try {
+            this.fileService.saveAbsoluteFile(body['filePath'], body['content']);
+            rep.json({ msg: 'ok' });
         } catch (err) {
             rep.json({ msg: 'err', data: err });
         }

@@ -36,6 +36,10 @@ export class FileService {
         return `${homedir()}/docker`;
     }
 
+    public getFileContent(path: string): Buffer {
+        return fs.readFileSync(path);
+    }
+
     public mkUserDirs(userName: string) {
         return this.mkDirsSync(this.userDirsPath(userName));
     }
@@ -111,15 +115,15 @@ export class FileService {
         return `${this.dockerRootPath()}/projects/${userName}`;
     }
 
-    public saveAbsoluteFile(absolutePath: string, file: UploadFile) {
+    public saveAbsoluteFile(absolutePath: string, data: any) {
         const parsedPath = path.parse(absolutePath);
         this.mkDirsSync(parsedPath.dir);
-        fs.writeFileSync(absolutePath, file.buffer);
+        fs.writeFileSync(absolutePath, data);
     }
 
-    public saveFile(userName: string, filePath: string, file: UploadFile) {
+    public saveFile(userName: string, filePath: string, data: any) {
         const absolutePath = path.join(this.userDirsPath(userName), filePath);
-        this.saveAbsoluteFile(absolutePath, file);
+        this.saveAbsoluteFile(absolutePath, data);
     }
 
     private mkDirsSync(dirPath: string) {
