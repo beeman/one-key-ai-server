@@ -12,7 +12,6 @@ export class FileController {
         if (file.length === 0 || (!body.userName && (!body.dirPath || !body.fileName))) {
             throw new HttpException('请求参数错误.', HttpStatus.FORBIDDEN)
         }
-
         try {
             if (body.dirPath && body.fileName) {
                 if (body.webkitRelativePath) {
@@ -22,6 +21,8 @@ export class FileController {
                 }
             } else if (body.userName && body.webkitRelativePath) {
                 this.fileService.saveFile(body.userName, body.webkitRelativePath, file);
+            } else if (body.userName && body.fileName) {
+                this.fileService.saveFile(body.userName, body.fileName, file);
             }
             return { msg: 'ok', data: file.originalname };
         } catch (err) {
