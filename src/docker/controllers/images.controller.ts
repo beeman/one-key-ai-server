@@ -65,7 +65,7 @@ export class ImagesController {
             AttachStdout: false,
             AttachStderr: false,
             ExposedPorts: exposedPorts,
-            WorkingDir: targetPath,
+            // WorkingDir: targetPath,
             // Env:['NVIDIA_VISIBLE_DEVICES=0'],
             Volumes: {
                 targetPath: {}
