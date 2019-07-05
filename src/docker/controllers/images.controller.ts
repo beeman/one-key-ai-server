@@ -57,6 +57,7 @@ export class ImagesController {
             return;
         }
         const volumes = this.fileService.userDirsPath(userName);
+        const targetPath = `/home/${userName}`;
         const options: Docker.ContainerCreateOptions = {
             Image: body['id'],
             Hostname: containerName,
@@ -64,14 +65,15 @@ export class ImagesController {
             AttachStdout: false,
             AttachStderr: false,
             ExposedPorts: exposedPorts,
+            WorkingDir: targetPath,
             // Env:['NVIDIA_VISIBLE_DEVICES=0'],
             Volumes: {
-                '/projects': {}
+                targetPath: {}
             },
             Tty: true,
             HostConfig: {
                 PublishAllPorts: true,
-                Binds: [`${volumes}:/projects`],
+                Binds: [`${volumes}:${targetPath}`],
                 Runtime: runtime,
                 Memory: this.configService.getDockerMemoryLimit(),
                 MemorySwap: this.configService.getDockerMemorySwap()
