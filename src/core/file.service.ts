@@ -126,6 +126,10 @@ export class FileService {
         this.saveAbsoluteFile(absolutePath, data);
     }
 
+    public getFileSize(filePath: string) {
+        return fs.statSync(filePath).size;
+    }
+
     private mkDirsSync(dirPath: string) {
         if (fs.existsSync(dirPath)) {
             return;

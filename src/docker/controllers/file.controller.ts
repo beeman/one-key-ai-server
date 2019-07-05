@@ -136,6 +136,11 @@ export class FileController {
     @Post('open-file')
     async openFile(@Response() rep, @Body() body) {
         try {
+            const fileSize = this.fileService.getFileSize(body['path']);
+            if (fileSize > 5 * 1024 * 1024) {
+                rep.json({ msg: 'warning', data: `文件过大（${fileSize}B）` });
+                return;
+            }
             const content = this.fileService.getFileContent(body['path']);
             rep.json({ msg: 'ok', data: content.toString() });
         } catch (err) {
