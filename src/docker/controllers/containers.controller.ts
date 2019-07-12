@@ -16,6 +16,17 @@ export class ContainersController {
         this.docker = this.dockerService.getDocker();
     }
 
+    @Post('host-config-binds')
+    async configVolumes(@Response() res, @Body() body) {
+        this.docker.getContainer(body['id']).inspect((err, info: Docker.ContainerInspectInfo) => {
+            if (err) {
+                res.json({ msg: 'err', data: err });
+            } else {
+                res.json({ msg: 'ok', data: info.HostConfig.Binds });
+            }
+        });
+    }
+
     @Post('info')
     async info(@Response() res, @Body() body) {
         const userName = body['userName'];
@@ -39,6 +50,17 @@ export class ContainersController {
                 // res.status(HttpStatus.OK).json(result);
             } else {
                 res.json({ msg: 'err', data: err });
+            }
+        });
+    }
+
+    @Post('inspect')
+    async inspect(@Response() res, @Body() body) {
+        this.docker.getContainer(body['id']).inspect((err, info: Docker.ContainerInspectInfo) => {
+            if (err) {
+                res.json({ msg: 'err', data: err });
+            } else {
+                res.json({ msg: 'ok', data: info });
             }
         });
     }

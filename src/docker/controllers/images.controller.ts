@@ -56,8 +56,11 @@ export class ImagesController {
             res.json({ statusCode: HttpStatus.FORBIDDEN, reason: '容器名错误' });
             return;
         }
-        const volumes = this.fileService.userDirsPath(userName);
+        const volume = this.fileService.userDirsPath(userName);
         const targetPath = `/home/${userName}`;
+        // const volumes = {};
+        // volumes[targetPath] = {};
+
         const options: Docker.ContainerCreateOptions = {
             Image: body['id'],
             Hostname: containerName,
@@ -67,13 +70,11 @@ export class ImagesController {
             ExposedPorts: exposedPorts,
             // WorkingDir: targetPath,
             // Env:['NVIDIA_VISIBLE_DEVICES=0'],
-            Volumes: {
-                targetPath: {}
-            },
+            // Volumes: volumes,
             Tty: true,
             HostConfig: {
                 PublishAllPorts: true,
-                Binds: [`${volumes}:${targetPath}`],
+                Binds: [`${volume}:${targetPath}`],
                 Runtime: runtime,
                 Memory: this.configService.getDockerMemoryLimit(),
                 MemorySwap: this.configService.getDockerMemorySwap()
