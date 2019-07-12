@@ -16,7 +16,7 @@ export class UsersService {
         this.userRepository.count().then((value) => {
             if (value <= 0) {
                 // this.addUser('admin', md5('robot'), true);
-                this.userRepository.insert(new User('admin', md5('robot'), true));
+                this.userRepository.insert(new User('admin', md5('admin'), true));
             }
         });
     }
