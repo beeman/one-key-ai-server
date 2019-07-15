@@ -44,6 +44,14 @@ export class FileService {
         return this.mkDirsSync(this.userDirsPath(userName));
     }
 
+    public newFile(path: string, isDir: boolean) {
+        if (isDir) {
+            this.mkDirsSync(path);
+        } else {
+            fs.writeFileSync(path, '');
+        }
+    }
+
     public removeUserDirs(userName: string): void {
         this.removeDir(this.userDirsPath(userName));
     }

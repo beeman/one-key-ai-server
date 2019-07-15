@@ -157,4 +157,14 @@ export class FileController {
             rep.json({ msg: 'err', data: err });
         }
     }
+
+    @Post('new-file')
+    async newFile(@Response() rep, @Body() body) {
+        try {
+            this.fileService.newFile(body['path'], body['isDir']);
+            rep.json({ msg: 'ok' });
+        } catch (err) {
+            rep.json({ msg: 'err', data: err });
+        }
+    }
 }
