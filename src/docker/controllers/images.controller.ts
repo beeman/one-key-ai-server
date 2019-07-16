@@ -86,7 +86,7 @@ export class ImagesController {
 
         this.docker.createContainer(options, (err, container) => {
             if (err) {
-                res.json(err);
+                res.json({ statusCode: err.statusCode, reason: err.reason, json: err.json });
             } else {
                 res.json({ statusCode: HttpStatus.OK, containerId: container.id });
             }
